@@ -1,0 +1,161 @@
+# Sifter — Bug Intake Automation (v1)
+
+## Overview
+
+Sifter is a local-first, AI-assisted bug intake system that converts unstructured user reports into structured GitHub issues using Cursor.
+
+v1 focuses on a single, reliable workflow:
+
+Gmail → Cursor Agent → GitHub → Reporter Feedback
+
+The system is designed to be simple, auditable, and extensible for future channels like Slack, Teams, and other AI agents.
+
+---
+
+## Goals
+
+### Primary Goal (v1)
+
+Enable a developer to:
+
+1. Fetch bug reports from a Gmail label
+2. Use Cursor to triage messages
+3. Create GitHub issues from valid bugs
+4. Reply to unclear reports requesting more details
+5. Ignore non-bug messages
+6. Track all actions in a local processing log
+7. Notify reporters when their issues are fixed
+
+---
+
+## Non-Goals (v1)
+
+- Slack / Teams integration
+- Jira / Linear integration
+- SaaS backend
+- Fully automated workflows without user visibility
+- Multi-user system
+
+---
+
+## Core Workflow
+
+### Intake
+
+1. Fetch messages from Gmail label
+2. Normalize messages into structured JSON
+3. Cursor reviews each message
+4. Cursor decides:
+   - create_issue
+   - reply
+   - ignore
+5. System executes action
+6. Log is updated
+
+---
+
+### Notify on Fix
+
+1. Read processing log
+2. For entries with GitHub issues:
+3. Check issue status via `gh issue view`
+4. If closed:
+   - Send reply to original reporter
+5. Update log
+
+---
+
+## CLI
+
+Command:
+
+
+bug-intake
+
+
+### Commands
+
+
+bug-intake init
+bug-intake fetch --headless
+bug-intake act
+bug-intake doctor
+
+
+---
+
+## Config (.env.bug_intake)
+
+
+BUG_INTAKE_CHANNEL=gmail
+BUG_INTAKE_GMAIL_LABEL=Bug Reports
+BUG_INTAKE_GMAIL_CREDENTIALS_PATH=./secrets/credentials.json
+BUG_INTAKE_GMAIL_TOKEN_PATH=./secrets/token.json
+BUG_INTAKE_GITHUB_REPO=owner/repo
+BUG_INTAKE_LOG_PATH=./.bug-intake/processing_log.json
+BUG_INTAKE_PENDING_ISSUES_DIR=./.bug-intake/pending_issues
+BUG_INTAKE_REQUIRE_APPROVAL_FOR_REPLIES=true
+
+
+---
+
+## Processing Log
+
+Stores:
+
+- message_id
+- action
+- notes
+- github.issue_number
+- github.issue_url
+- notification status
+
+---
+
+## Architecture (v1 + future ready)
+
+
+Channel → Normalized Message → Agent → Action → Log → Feedback
+
+
+### v1 implementations:
+- Channel: Gmail
+- Issue Provider: GitHub (via gh CLI)
+- Agent: Cursor Skill
+
+### Future:
+- Slack / Teams adapters
+- Claude / OpenAI agents
+- Jira / Linear providers
+
+---
+
+## Key Design Principles
+
+- Local-first (no hosted backend)
+- Transparent (everything logged)
+- Idempotent (no duplicate actions)
+- Human-in-loop (no silent replies)
+- Extensible (adapter-based design)
+
+---
+
+## Success Criteria
+
+A user can:
+
+- Install package
+- Run init
+- Fetch Gmail bugs
+- Create GitHub issue via Cursor
+- Reply to a vague bug
+- Ignore a non-bug
+- Notify reporter after fix
+
+---
+
+## Naming
+
+- Brand: Sifter
+- CLI: bug-intake
+- Repo: sifter-bug-intake
