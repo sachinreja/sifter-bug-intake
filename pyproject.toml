@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=68,<77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,7 +7,11 @@ name = "bug-intake"
 version = "0.1.0"
 description = "Sifter local-first bug intake CLI"
 readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.9"
+classifiers = [
+  "License :: OSI Approved :: Apache Software License",
+]
 dependencies = [
   "google-api-python-client>=2.150.0",
   "google-auth-httplib2>=0.2.0",
@@ -22,6 +26,9 @@ bug-intake = "bug_intake.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["bug_intake*"]
+
+[tool.setuptools]
+license-files = ["LICENSE"]
 
 [tool.setuptools.package-data]
 "bug_intake.templates" = ["*.md"]

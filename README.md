@@ -245,6 +245,11 @@ See [SECURITY.md](./SECURITY.md). Highlights:
 
 ---
 
+## License
+Sifter Bug Intake is licensed under the Apache License 2.0. See [LICENSE](./LICENSE) for details.
+
+---
+
 ## Uninstall
 
 ```bash
