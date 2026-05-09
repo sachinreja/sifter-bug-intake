@@ -42,6 +42,11 @@ bug-intake fetch --headless --max-results 25
 - Writes one JSON file per new message into `.bug-intake/pending_issues/`
 - Updates `processing_log.json` with `action: "fetched"` records
 
+`--headless` only controls the OAuth flow (use the console-based flow when no
+browser is available). It does **not** print message bodies to stdout — to
+read fetched messages you must open the JSON files under
+`.bug-intake/pending_issues/`.
+
 If nothing new is returned, stop and report: "No new bug reports."
 
 ### Step 2 — Read each pending message
@@ -173,15 +178,19 @@ issue is **closed**. Run:
 bug-intake act notify
 ```
 
-By default it sends a generic "issue resolved" message. To send a tailored
-message for the closed issues in this batch:
+By default it sends a generic "issue resolved" message that includes the
+related issue number and URL. If you pass `--template`, the CLI sends your
+template body **as-is** — the issue number and URL are **not** appended
+automatically. If you want the closed issue referenced in the email, include
+the issue number/link in your template body manually.
 
 ```bash
 bug-intake act notify --template "$(cat <<'EOF'
 Hi there,
 
-Quick update — the bug you reported has been resolved and shipped. Tracking
-issue: <will be appended automatically by the CLI context>.
+Quick update — the bug you reported has been resolved and shipped.
+(Optional: paste the issue link here, e.g.
+https://github.com/<owner>/<repo>/issues/<n>.)
 
 If anything still looks off, just reply to this email with steps to reproduce
 and we will reopen.

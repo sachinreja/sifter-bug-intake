@@ -8,17 +8,25 @@ version = "0.1.0"
 description = "Sifter local-first bug intake CLI"
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
   "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
   "google-api-python-client>=2.150.0",
   "google-auth-httplib2>=0.2.0",
   "google-auth-oauthlib>=1.2.0",
-  "requests>=2.33.0; python_version >= '3.10'",
-  "requests>=2.32.5;  python_version <  '3.10'",
-  "filelock>=3.20.3;  python_version >= '3.10'",
+  "requests>=2.32.5",
+  "filelock>=3.20.3",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.4",
 ]
 
 [project.scripts]
@@ -32,3 +40,6 @@ license-files = ["LICENSE"]
 
 [tool.setuptools.package-data]
 "bug_intake.templates" = ["*.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

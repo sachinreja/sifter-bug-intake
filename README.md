@@ -168,11 +168,17 @@ when the agent (or you) explicitly invokes `act reply` or `act notify`.
 | Command | Purpose |
 | --- | --- |
 | `bug-intake init` | Guided setup wizard. |
-| `bug-intake fetch --headless [--max-results N]` | Pull new messages from the channel. Idempotent by `message_id`. |
+| `bug-intake fetch [--headless] [--max-results N]` | Pull new messages from the channel. Writes one JSON file per new message to `.bug-intake/pending_issues/` and appends `fetched` records to `processing_log.json`. Idempotent by `message_id`. |
 | `bug-intake act create_issue --message-id ID --title T --body B [--notes N]` | Create a GitHub issue, link it to the message. |
 | `bug-intake act reply --message-id ID --body B [--notes N]` | Send an email reply to the original reporter. |
 | `bug-intake act ignore --message-id ID [--notes N]` | Mark the message ignored. |
 | `bug-intake act notify [--template T]` | For each linked-but-not-yet-notified record, check `gh issue view`; if closed, email the reporter. |
+
+> `--headless` only controls the OAuth flow (use the console-based flow when no
+> browser is available, e.g. over SSH). It does **not** change command output —
+> in particular, `fetch` never prints message bodies to stdout. Fetched messages
+> are always written to `.bug-intake/pending_issues/<message_id>.json` for the
+> agent to read.
 
 State lives under `.bug-intake/`:
 
